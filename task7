@@ -1,0 +1,85 @@
+class PhoneBook:
+    INITIAL_CAPACITY = 8
+    LOAD_FACTOR_THRESHOLD = 0.75
+
+    def __init__(self):
+        self._capacity = self.INITIAL_CAPACITY
+        self._size = 0
+        self._buckets = [[] for _ in range(self._capacity)]
+
+    def _hash(self, key: str) -> int:
+        h = 0
+        prime = 31
+        for ch in key:
+            h = (h * prime + ord(ch)) % self._capacity
+        return h
+
+    def _rehash(self):
+        old_buckets = self._buckets
+        self._capacity *= 2
+        self._size = 0
+        self._buckets = [[] for _ in range(self._capacity)]
+        for bucket in old_buckets:
+            for name, phone in bucket:
+                self.add(name, phone)
+
+    def add(self, name: str, phone: str) -> None:
+        if self._size / self._capacity >= self.LOAD_FACTOR_THRESHOLD:
+            self._rehash()
+        idx = self._hash(name)
+        for i, (k, _) in enumerate(self._buckets[idx]):
+            if k == name:
+                self._buckets[idx][i] = (name, phone)
+                return
+        self._buckets[idx].append((name, phone))
+        self._size += 1
+
+    def get(self, name: str) -> str:
+        idx = self._hash(name)
+        for k, v in self._buckets[idx]:
+            if k == name:
+                return v
+        return "Contact not found"
+
+    def remove(self, name: str) -> bool:
+        idx = self._hash(name)
+        for i, (k, _) in enumerate(self._buckets[idx]):
+            if k == name:
+                self._buckets[idx].pop(i)
+                self._size -= 1
+                return True
+        return False
+
+    def contains(self, name: str) -> bool:
+        idx = self._hash(name)
+        for k, _ in self._buckets[idx]:
+            if k == name:
+                return True
+        return False
+
+    def count(self) -> int:
+        return self._size
+
+
+if __name__ == "__main__":
+    pb = PhoneBook()
+
+    pb.add("Alice", "+1-555-0101")
+    pb.add("Bob", "+1-555-0102")
+    pb.add("Carol", "+1-555-0103")
+    pb.add("David", "+1-555-0104")
+    pb.add("Eve", "+1-555-0105")
+
+    print("PhoneBook demo")
+    print(f"Total contacts: {pb.count()}")
+    print(f"Alice's number: {pb.get('Alice')}")
+    print(f"Contains 'Bob': {pb.contains('Bob')}")
+
+    pb.remove("Bob")
+    print(f"After removing Bob, contains 'Bob': {pb.contains('Bob')}")
+    print(f"Total contacts: {pb.count()}")
+
+    pb.add("Alice", "+1-555-9999")
+    print(f"Updated Alice's number: {pb.get('Alice')}")
+
+    print(f"Unknown contact: {pb.get('Zara')}")
