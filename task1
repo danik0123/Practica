@@ -1,0 +1,26 @@
+def find_product(products: list, target: str) -> int:
+    for i in range(len(products)):
+        if products[i] == target:
+            return i + 1
+    return -1
+
+
+if __name__ == "__main__":
+    products = [
+        "Laptop",
+        "Smartphone",
+        "Tablet",
+        "Monitor",
+        "Keyboard",
+        "Mouse",
+        "Headphones",
+    ]
+
+    test_cases = ["Tablet", "Mouse", "Camera"]
+
+    for query in test_cases:
+        result = find_product(products, query)
+        if result != -1:
+            print(f"Product '{query}' found at position {result}")
+        else:
+            print(f"Product '{query}' not found")
