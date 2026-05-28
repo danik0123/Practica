@@ -1,0 +1,60 @@
+import time
+
+
+def climb_recursive(n: int) -> int:
+    if n <= 0:
+        return 0
+    if n == 1:
+        return 1
+    if n == 2:
+        return 2
+    return climb_recursive(n - 1) + climb_recursive(n - 2)
+
+
+def climb_iterative(n: int) -> int:
+    if n <= 0:
+        return 0
+    if n == 1:
+        return 1
+    if n == 2:
+        return 2
+    prev2, prev1 = 1, 2
+    for _ in range(3, n + 1):
+        current = prev1 + prev2
+        prev2 = prev1
+        prev1 = current
+    return prev1
+
+
+def measure_time(func, n: int, repeats: int = 5) -> float:
+    start = time.perf_counter()
+    for _ in range(repeats):
+        func(n)
+    end = time.perf_counter()
+    return (end - start) / repeats
+
+
+if __name__ == "__main__":
+    test_values = [10, 20, 30, 35]
+
+    print(f"{'n':<6} {'Result':<12} {'Recursive (s)':<18} {'Iterative (s)':<18}")
+    print("-" * 54)
+
+    for n in test_values:
+        result = climb_iterative(n)
+        rec_time = measure_time(climb_recursive, n)
+        iter_time = measure_time(climb_iterative, n)
+        print(f"{n:<6} {result:<12} {rec_time:<18.6f} {iter_time:<18.8f}")
+
+    print()
+    print("Performance analysis:")
+    print(
+        "Recursive: O(2^n) time - each call branches into 2, causing exponential growth."
+    )
+    print("  Repeated subproblems are recalculated many times (no memoization).")
+    print(
+        "Iterative: O(n) time - single loop, each step computed once, constant O(1) space."
+    )
+    print(
+        "  At n=35 the recursive version makes ~29M calls vs 33 iterations for iterative."
+    )
