@@ -1,0 +1,32 @@
+def create_rating(students: list) -> list:
+    result = [pair for pair in students]
+    n = len(result)
+
+    for i in range(n):
+        max_idx = i
+        for j in range(i + 1, n):
+            if result[j][1] > result[max_idx][1]:
+                max_idx = j
+        result[i], result[max_idx] = result[max_idx], result[i]
+
+    return result
+
+
+if __name__ == "__main__":
+    students = [
+        ("Alice", 88.5),
+        ("Bob", 92.0),
+        ("Carol", 75.3),
+        ("David", 92.0),
+        ("Eve", 81.7),
+        ("Frank", 68.4),
+        ("Grace", 95.1),
+    ]
+
+    rating = create_rating(students)
+
+    print("Student rating (highest to lowest):")
+    print(f"{'Rank':<6} {'Name':<10} {'Average Score'}")
+    print("-" * 30)
+    for rank, (name, score) in enumerate(rating, start=1):
+        print(f"{rank:<6} {name:<10} {score}")
