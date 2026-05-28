@@ -1,0 +1,45 @@
+from datetime import datetime
+
+
+def merge_orders(web_orders: list, app_orders: list) -> list:
+    merged = []
+    i = 0
+    j = 0
+
+    while i < len(web_orders) and j < len(app_orders):
+        if web_orders[i]["created_at"] <= app_orders[j]["created_at"]:
+            merged.append(web_orders[i])
+            i += 1
+        else:
+            merged.append(app_orders[j])
+            j += 1
+
+    while i < len(web_orders):
+        merged.append(web_orders[i])
+        i += 1
+
+    while j < len(app_orders):
+        merged.append(app_orders[j])
+        j += 1
+
+    return merged
+
+
+if __name__ == "__main__":
+    web_orders = [
+        {"id": "W1", "item": "Laptop", "created_at": datetime(2024, 1, 1, 8, 0)},
+        {"id": "W2", "item": "Mouse", "created_at": datetime(2024, 1, 1, 10, 30)},
+        {"id": "W3", "item": "Monitor", "created_at": datetime(2024, 1, 1, 14, 0)},
+    ]
+
+    app_orders = [
+        {"id": "A1", "item": "Keyboard", "created_at": datetime(2024, 1, 1, 9, 15)},
+        {"id": "A2", "item": "Headphones", "created_at": datetime(2024, 1, 1, 11, 45)},
+        {"id": "A3", "item": "Webcam", "created_at": datetime(2024, 1, 1, 15, 30)},
+    ]
+
+    result = merge_orders(web_orders, app_orders)
+
+    print("Merged orders (chronological):")
+    for order in result:
+        print(f"  [{order['id']}] {order['item']:12} @ {order['created_at'].strftime('%H:%M')}")
