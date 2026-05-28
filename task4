@@ -1,0 +1,32 @@
+def validate_brackets(code: str) -> bool:
+    stack = []
+    opening = {"(", "[", "{"}
+    matching = {")": "(", "]": "[", "}": "{"}
+
+    for char in code:
+        if char in opening:
+            stack.append(char)
+        elif char in matching:
+            if not stack or stack[-1] != matching[char]:
+                return False
+            stack.pop()
+
+    return len(stack) == 0
+
+
+if __name__ == "__main__":
+    test_cases = [
+        ("def foo(x): return [x * 2]", True),
+        ("if (a > b) { print(a) }", True),
+        ("arr = [1, (2, 3])", False),
+        ("{[()]}", True),
+        ("((())", False),
+        ("", True),
+        ("{[(])}", False),
+    ]
+
+    for code, expected in test_cases:
+        result = validate_brackets(code)
+        status = "OK" if result == expected else "FAIL"
+        display = code if code else "(empty string)"
+        print(f"[{status}] '{display}' -> {result}")
