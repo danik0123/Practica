@@ -1,0 +1,37 @@
+def search_dictionary(dictionary: list, word: str) -> str:
+    left = 0
+    right = len(dictionary) - 1
+
+    while left <= right:
+        mid = (left + right) // 2
+        mid_word = dictionary[mid][0]
+
+        if mid_word == word:
+            return dictionary[mid][1]
+        elif mid_word < word:
+            left = mid + 1
+        else:
+            right = mid - 1
+
+    return "Word not found"
+
+
+if __name__ == "__main__":
+    dictionary = [
+        ("algorithm", "A step-by-step procedure for solving a problem"),
+        ("binary", "Related to a system with two elements"),
+        ("compiler", "A program that translates source code into machine code"),
+        ("database", "An organized collection of structured information"),
+        ("encryption", "The process of encoding information"),
+        ("framework", "A platform for developing software applications"),
+        ("iterator", "An object that enables traversal of a container"),
+        ("loop", "A sequence of instructions repeated until a condition is met"),
+        ("recursion", "A function that calls itself"),
+        ("syntax", "The set of rules defining correctly structured programs"),
+    ]
+
+    test_words = ["compiler", "loop", "variable"]
+
+    for w in test_words:
+        result = search_dictionary(dictionary, w)
+        print(f"'{w}': {result}")
